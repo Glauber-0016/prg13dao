@@ -4,6 +4,8 @@
  */
 package br.com.ifba.curso.view;
 
+import br.com.ifba.curso.controller.CursoController;
+import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.dao.CursoDao;
 import br.com.ifba.curso.entity.Curso;
 import jakarta.persistence.Entity;
@@ -18,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Glauber
  */
 public class CursoUI extends javax.swing.JFrame {
-
+    private final CursoIController cursoController = new CursoController();
     /**
      * Creates new form CursoUI
      */
@@ -214,7 +216,7 @@ public class CursoUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        CursoDao cursoDao = new CursoDao();  
+         
         Curso curso = new Curso();
        
         // Pega a linha selecionada na tabela
@@ -224,8 +226,8 @@ public class CursoUI extends javax.swing.JFrame {
         if (linhaSelecionada != -1) {
             //Pega o ID da linha selecionada
             long idCurso = (long) tblCurso.getValueAt(linhaSelecionada, 0);
-            curso = cursoDao.findById(idCurso);
-            cursoDao.delete(curso);
+            curso = cursoController.findById(idCurso);
+            cursoController.delete(curso);
 
             // Remove o curso da tabela
             DefaultTableModel tableModel = (DefaultTableModel) tblCurso.getModel();
@@ -245,9 +247,8 @@ public class CursoUI extends javax.swing.JFrame {
 
     private void btnAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarActionPerformed
 
-        CursoDao cursoDao = new CursoDao();
-        List<Curso> cursos = cursoDao.findAll();
-   
+        List<Curso> cursos = cursoController.findAll();
+    
         DefaultTableModel tableModel = (DefaultTableModel) tblCurso.getModel();
         tableModel.setRowCount(0);
 
@@ -264,24 +265,17 @@ public class CursoUI extends javax.swing.JFrame {
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         
-        int linhaSelecionada = tblCurso.getSelectedRow();
-        // Verifica se alguma linha foi selecionada
-        if (linhaSelecionada != -1) {
-            //Abre a tela de editar
             EditCursoUI editCursoUI = new EditCursoUI();
             editCursoUI.setDefaultCloseOperation(CursoUI.DISPOSE_ON_CLOSE);
             editCursoUI.setVisible(true);
-           
-        } else {
-            JOptionPane.showMessageDialog(this, "Selecione um curso para Editar.");
-        }
+
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
-        CursoDao cursoDao = new CursoDao();  
+       
         String text = txtFind.getText().trim();
 
-        Curso curso = cursoDao.findByCodCurso(text);
+        Curso curso = cursoController.findByCodCurso(text);
 
         if (curso != null) {
             JOptionPane.showMessageDialog(this, 
@@ -295,19 +289,19 @@ public class CursoUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
     public Entity getCursobyLinha () {
-        CursoDao cursoDao = new CursoDao();  
+       
         Curso curso = new Curso();
         int linhaSelecionada = tblCurso.getSelectedRow();
         long idCurso = (long) tblCurso.getValueAt(linhaSelecionada, 0);
-        curso = cursoDao.findById(idCurso);
+        curso = cursoController.findById(idCurso);
         
         return (Entity) curso;
     }
     
   
     private void mostrarTabela () {
-        CursoDao cursoDao = new CursoDao();
-        List<Curso> cursos = cursoDao.findAll();
+  
+        List<Curso> cursos = cursoController.findAll();
    
         DefaultTableModel tableModel = (DefaultTableModel) tblCurso.getModel();
         tableModel.setRowCount(0);

@@ -4,6 +4,8 @@
  */
 package br.com.ifba.curso.view;
 
+import br.com.ifba.curso.controller.CursoController;
+import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.dao.CursoDao;
 import br.com.ifba.curso.entity.Curso;
 import java.util.List;
@@ -15,7 +17,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Glauber
  */
 public class EditCursoUI extends javax.swing.JFrame {
-
+    private final CursoIController cursoController = new CursoController();
     /**
      * Creates new form EditCursoUI
      */
@@ -162,15 +164,15 @@ public class EditCursoUI extends javax.swing.JFrame {
             long idCurso = (long) tblCurso.getValueAt(linhaSelecionada, 0);
         
             // Carregue o curso existente do banco de dados
-            CursoDao cursoDao = new CursoDao();
-            Curso curso = cursoDao.findById(idCurso);
+            
+            Curso curso = cursoController.findById(idCurso);
         
             // Atualize os campos do curso com os valores inseridos no formulário
             curso.setNome(txtNome.getText());
             curso.setCodigoCurso(txtCod.getText());
         
             // Atualize o curso no banco de dados
-            cursoDao.update(curso);
+            cursoController.update(curso);
             JOptionPane.showMessageDialog(this, "Curso atualizado com sucesso.");
         } else {
         
@@ -181,8 +183,8 @@ public class EditCursoUI extends javax.swing.JFrame {
     
     
     private void mostrarTabela () {
-        CursoDao cursoDao = new CursoDao();
-        List<Curso> cursos = cursoDao.findAll();
+  
+        List<Curso> cursos = cursoController.findAll();
    
         DefaultTableModel tableModel = (DefaultTableModel) tblCurso.getModel();
         tableModel.setRowCount(0);
